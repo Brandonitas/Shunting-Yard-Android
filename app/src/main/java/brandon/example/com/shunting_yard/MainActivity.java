@@ -213,6 +213,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         for (int i = 0; i < rows; i++) {
             eliminarLinea();
         }
+        tvevaluation.setText("");
     }
 
 
@@ -227,6 +228,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         else if(token.equals("^") || token.equals("*") || token.equals("/") || token.equals("+") || token.equals("-")) {//If token is an operator o1
             if (!operatorStack.isEmpty() && operatorStack.peek() != '(') {//This excludes the open parenthesis
                 while ((!operatorStack.isEmpty()) && ((!token.equals("^") && Operator.precedence(token.charAt(0), operatorStack.peek()) <= 0) || (!token.equals("^") && Operator.precedence(token.charAt(0), operatorStack.peek()) < 0))) {//while there is a operator in the top of the stack and o1 is left associative and its precedence is less o equal than o2 or o1 is right associative and its precedence is less than o2
+                    if(operatorStack.peek() == '('){
+                        break;
+                    }
                     output.add(String.valueOf(operatorStack.pop()));//pop o2 from the stack and enqueue it
                     eliminarLinea();
                     tvoutput.setText("");
@@ -364,12 +368,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public void restartB(){
         clear(input,output,operatorStack);
+        initial=etinput.getText().toString();
         etinput.setText(spaces(etinput.getText().toString()));
         for (String it:etinput.getText().toString().split(" ")) {
             input.add(it);
         }
         etinput.setFocusable(false);
-        initial=etinput.getText().toString();
         btnComplete.setEnabled(true);
         btnStep.setEnabled(true);
         btnEvaluate.setEnabled(false);
